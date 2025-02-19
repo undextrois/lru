@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRU Cache Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #cache-output { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>LRU Cache Demo</h1>
+    <div>
+        <label for="key">Key:</label>
+        <input type="text" id="key" placeholder="Enter key">
+        <label for="value">Value:</label>
+        <input type="text" id="value" placeholder="Enter value">
+        <button onclick="putItem()">Put Item</button>
+        <button onclick="getItem()">Get Item</button>
+    </div>
+    <div>
+        <button onclick="clearCache()">Clear Cache</button>
+        <button onclick="resizeCache()">Resize Cache</button>
+        <label for="capacity">New Capacity:</label>
+        <input type="number" id="capacity" placeholder="Enter new capacity">
+    </div>
+    <div id="cache-output">
+        <h2>Cache Contents:</h2>
+        <pre id="cache-contents"></pre>
+    </div>
+
+    <script>
+        class LRUCache {
+            constructor(capacity) {
+                if (capacity <= 0) {
+                    throw new Error("Capacity must be greater than zero");
+                }
+                this.capacity = capacity;
+                this.cache = new Map();
+            }
+
+            get(key) {
+                if (!this.cache.has(key)) {
+                    return null;
+                }
+                const value = this.cache.get(key);
+                this.cache.delete(key);
+                this.cache.set(key, value);
+                return value;
+            }
+
+            put(key, value) {
+                if (key == null || value == null) {
+                    throw new Error("Key and value cannot be null");
+                }
+                if (this.cache.size >= this.capacity && !this.cache.has(key)) {
+                    const firstKey = this.cache.keys().next().value;
+                    this.cache.delete(firstKey);
+                }
+                if (this.cache.has(key)) {
+                    this.cache.delete(key);
+                }
+                this.cache.set(key, value);
+            }
+
+            clear() {
+                this.cache.clear();
+            }
+
+            resize(newCapacity) {
+                if (newCapacity <= 0) {
+                    throw new Error("New capacity must be greater than zero");
+                }
+                this.capacity = newCapacity;
+                while (this.cache.size > newCapacity) {
+                    const firstKey = this.cache.keys().next().value;
+                    this.cache.delete(firstKey);
+                }
+            }
+
+            getAll() {
+                return Array.from(this.cache.entries());
+            }
+        }
+
+        const cache = new LRUCache(3);
+
+        function putItem() {
+            const key = document.getElementById('key').value;
+            const value = document.getElementById('value').value;
+            cache.put(key, value);
+            updateCacheDisplay();
+        }
+
+        function getItem() {
+            const key = document.getElementById('key').value;
+            const value = cache.get(key);
+            alert(value !== null ? `Value: ${value}` : 'Key not found');
+            updateCacheDisplay();
+        }
+
+        function clearCache() {
+            cache.clear();
+            updateCacheDisplay();
+        }
+
+        function resizeCache() {
+            const newCapacity = parseInt(document.getElementById('capacity').value);
+            cache.resize(newCapacity);
+            updateCacheDisplay();
+        }
+
+        function updateCacheDisplay() {
+            const cacheContents = document.getElementById('cache-contents');
+            const entries = cache.getAll();
+            cacheContents.textContent = entries.length > 0 ? entries.map(([k, v]) => `${k}: ${v}`).join('\n') : 'Cache is empty';
+        }
+    </script>
+</body>
+</html>
