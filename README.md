@@ -2,7 +2,7 @@
 
 ---
 
-# LRU Cache Implementation in Java
+# LRU Cache Implementation in Java & JS
 
 ## Overview
 
