@@ -6,7 +6,7 @@
 
 ## Overview
 
-The `LRUCache` class implements a Least Recently Used (LRU) cache in Java. This cache stores a fixed number of key-value pairs and evicts the least recently accessed item when the cache reaches its capacity. It is designed to be thread-safe, allowing concurrent access from multiple threads.
+The `LRUCache` class implements a Least Recently Used (LRU) cache in Javascript. This cache stores a fixed number of key-value pairs and evicts the least recently accessed item when the cache reaches its capacity. It is designed to be thread-safe, allowing concurrent access from multiple threads.
 
 ## Features
 
